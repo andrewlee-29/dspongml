@@ -6,7 +6,9 @@ from collections import namedtuple
 
 import pygame
 import numpy as np
+import pandas as pd
 import csv
+
 
 #Tutorial from:
 # https://dr0id.bitbucket.io/legacy/pygame_tutorial00.html
@@ -91,7 +93,7 @@ def main():
     round_limit = 1 #how many rounds to play? 
     cround = 0 #current round count
 
-    train = True #True #train or deploy?
+    train = False #True #train or deploy?
     #write to a CSV file for training
     with open('pong_data.csv', mode='w') as train_file:
         print("Recording to a CSV file for training.")
@@ -150,9 +152,17 @@ def main():
             pass #EDIT: ADD YOUR CODE HERE
             #complete this to predict using your model! 
             #full write:
-            # train_file.writerow([b0.x, b0.y, b0.vx, b0.vy, dir, p0.y, Ball.RADIUS, Paddle.L, Paddle.STEP, CONSTS.WIDTH, CONSTS.HEIGHT, CONSTS.BORDER, CONSTS.VELOCITY, CONSTS.FPS])
-            # X = ?
-            # y = model.predict(X)
+            with open('pong_data.csv', mode='a') as train_file:
+                train_file = csv.writer(train_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                train_file.writerow([b0.x, b0.y, b0.vx, b0.vy, dir, p0.y, Ball.RADIUS, Paddle.L, Paddle.STEP, CONSTS.WIDTH, CONSTS.HEIGHT, CONSTS.BORDER, CONSTS.VELOCITY, CONSTS.FPS])
+            input= {'ball_x':b0.x, 'ball_y':b0.y,'ball_vx': b0.vx,'ball_vy': b0.vy,'paddle_direction': dir,'Ball.RADIUS': Ball.RADIUS,'Paddle.L': Paddle.L,'Paddle.STEP': Paddle.STEP,
+            'WIDTH': CONSTS.WIDTH, 'HEIGHT':CONSTS.HEIGHT,'BORDER': CONSTS.BORDER,'VELOCITY': CONSTS.VELOCITY,'FPS': CONSTS.FPS}
+            X = pd.DataFrame([input])
+            y = model.predict(X)
+            if y > p0.y:
+                dir = 1
+            else:
+                dir = -1
 
 
         pygame.display.update() 
@@ -177,4 +187,3 @@ def main():
 if __name__=="__main__":
     # call the main function
     main()
-    
