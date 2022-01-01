@@ -9,8 +9,10 @@ Here is the 3 consecutive games result:
 
 Round 1 over. 
 Time: 13.06 sec
+
 Round 2 over. 
 Time: 143.03 sec
+
 Round 3 over. 
 Time: 32.81 sec
 
